@@ -11,7 +11,7 @@ can be looked up in the cache rather than recomputed. In this
 Programming Assignment you will take advantage of the scoping rules of
 the R language and how they can be manipulated to preserve state inside
 of an R object.
-
+touch
 ### Example: Caching the Mean of a Vector
 
 In this example we introduce the `<<-` operator which can be used to
