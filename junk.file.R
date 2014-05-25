@@ -35,7 +35,7 @@ shChar <- function(x){
 makeVector <- function(x = numeric()) {
     m <- NULL
     print("inside makevec")
-    browser()
+    #browser()
     set <- function(y) {
         x <<- y
         m <<- NULL
