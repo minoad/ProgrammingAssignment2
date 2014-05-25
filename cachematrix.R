@@ -1,32 +1,20 @@
-## Put comments here that give an overall description of what your
-## functions do.  touch
-## Write a short comment describing this function
-
-# xx <-matrix(round(runif(9,1,100)),3,3)
-# mat_x <- makeCacheMatrix()
-
-# mat_x$set(matrix(rnorm(1:9),3,3))
-
+#here we create the holding data structure.  depending on time i am going to try and fix the need for curr_m.  this is from a bug
 makeCacheMatrix <- function(x = matrix()) {
-    #create the structure
-    
     set <- function(y) {
-        #this is the original matrix
         if (ncol(y)==nrow(y)){
-            
-                orig_mat<<-y
-            
+            print("set the matrix")
+            orig_mat<<-y
         }else{
             warning("must input a square matrix")
         }
         setinv(y)
-    }
-    
+    }  
     get <- function(){
         curr_m<<-x
         if(exists("orig_mat")){
+            #if the cache exists and is identical to the current input, simply return it.
             if(identical(x,orig_mat)){
-                warning("exists and identical")
+                print("exists and identical")
                 return(orig_mat)
             }
         }else{
@@ -34,52 +22,28 @@ makeCacheMatrix <- function(x = matrix()) {
             return(x)
         }
     }
-    
-    setinv <- function(mat=orig_mat){ 
-        #not sure why, but the default above is failing
-        inv_mat<<-solve(mat)
-    }
-    
-    getinv <- function(){
-        if(inv_mat != NULL){
-            return(inv_mat)
-        }else{
-            warning("No inversion has been set")
-        }
-    }
-    #browser()
-    list(set = set, get = get,
-         setinv = setinv,
-         getinv = getinv)
-
+    setinv <- function(mat=orig_mat){inv_mat<<-solve(mat)}
+    getinv <- function(){if(inv_mat != NULL){return(inv_mat)}else{warning("No inversion has been set")}    }
+    list(set = set, get = get,setinv = setinv, getinv = getinv)
 }
-
-
-## Write a short comment describing this function
-
+#this is where we set everything into the data structure.
+#where the global orig_mat does not exist or is not equal to current, then set anew.
+##Else, return the existing cached copy
 cacheSolve <- function(x, ...) 
     {
-    ## Return a matrix that is the inverse of 'x'
-    #ii<-x$getinv
-    #browser()
     if( !exists("orig_mat") | (!identical(x$get(),curr_m)) ) {
         print("either not set or not identical")
-        
+        print(x$get())
         x$set(curr_m)
-        #x$set(orig)
     }
-    if(exists("orig_mat"))
-        {
-        if(identical(x$get,orig_mat))
-           {
-            warning("cache is already solved.  Returning inverse")
-            }
-        }else{
-            print("cache present, but aged.  rerunning")
-            orig<-x$get()
-            x$set(orig)
-        }
     return(inv_mat)
     }
+
+
+#quick test below.
+#creates two matrixes.
+#should invert and change the solutions between z and zz
 z<-matrix(round(runif(9,1,100)),3,3)    
 zz<-matrix(round(runif(9,1,100)),3,3)
+cacheSolve(makeCacheMatrix(z))
+cacheSolve(makeCacheMatrix(zz))
